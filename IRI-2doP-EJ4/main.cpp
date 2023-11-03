@@ -27,7 +27,7 @@ void incrementarPrecio(sPrecio* &precio, unsigned int &tam){
         if(tam<=0){
             precio = new sPrecio[++tam];
         }
-        else return;
+        return;
     }
 
     sPrecio* temporal = new sPrecio[++tam];
@@ -45,7 +45,7 @@ void incrementarBalanza(sBalanza* &balanza, unsigned int &tam){
         if(tam<=0){
             balanza = new sBalanza[++tam];
         }
-        else return;
+        return;
     }
 
     sBalanza* temporal = new sBalanza[++tam];
@@ -63,7 +63,7 @@ void incrementarCampo(sCampo* &campo, unsigned int &tam){
         if(tam<=0){
             campo = new sCampo[++tam];
         }
-        else return;
+        return;
     }
 
     sCampo* temporal = new sCampo[++tam];
@@ -144,7 +144,7 @@ int main(){
 
     for(unsigned int i=0; i < tamB; i++){
 
-        while(balanza[i].semilla!=precio[j].grano){
+        while(j<tamP && balanza[i].semilla!=precio[j].grano){
             j++;
         }
 
@@ -152,8 +152,11 @@ int main(){
             k++;
         }
 
-        if(k<tamC){
+        if(k<tamC && j<tamP){
             campo[k].total += balanza[i].precioXquintal * balanza[i].hectareas * precio[j].precio;
+        }
+        else if(j>=tamP){
+            cout<<"No se encontró un precio para la semilla: "<<balanza[i].semilla<<endl;
         }
         else {
             incrementarCampo(campo, tamC);
@@ -173,6 +176,7 @@ int main(){
         while(j<tamC){
             archiS<<"Campo ["<<campo[j].campo<<"] vendió a U$D ["<<campo[j].total<<"]\n";
             total+=campo[j].total;
+            j++;
         }
 
         archiS<<"Ganancia total U$D ["<<total<<"]\n";

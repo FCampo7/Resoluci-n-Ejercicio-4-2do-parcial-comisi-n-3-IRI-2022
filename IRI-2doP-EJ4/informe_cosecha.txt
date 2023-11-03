@@ -1,0 +1,5 @@
+Campo [A] vendió a U$D [3.393e+09]
+Campo [B] vendió a U$D [3.9882e+09]
+Campo [C] vendió a U$D [2.3604e+09]
+Campo [E] vendió a U$D [1.86426e+09]
+Ganancia total U$D [1.16059e+10]
