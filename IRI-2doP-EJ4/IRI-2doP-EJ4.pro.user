@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 11.0.2, 2023-11-02T21:24:11. -->
+<!-- Written by QtCreator 11.0.2, 2023-11-03T09:24:48. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -238,8 +238,9 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/fcamp/OneDrive/Documentos/!Facultad - UF/!Ayudantia/IRI/IRI 2023/2do parcial IRI ej 4/IRI-2doP-EJ4/IRI-2doP-EJ4.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/fcamp/OneDrive/Documentos/!Facultad - UF/!Ayudantia/IRI/IRI 2023/2do parcial IRI ej 4/IRI-2doP-EJ4/IRI-2doP-EJ4.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">IRI-2doP-EJ42</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/fcamp/OneDrive/Documentos/!Facultad - UF/!Ayudantia/IRI/IRI 2023/2do parcial IRI ej 4/Resoluci-n-Ejercicio-4-2do-parcial-comisi-n-3-IRI-2022/IRI-2doP-EJ4/IRI-2doP-EJ4.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/fcamp/OneDrive/Documentos/!Facultad - UF/!Ayudantia/IRI/IRI 2023/2do parcial IRI ej 4/Resoluci-n-Ejercicio-4-2do-parcial-comisi-n-3-IRI-2022/IRI-2doP-EJ4/IRI-2doP-EJ4.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
