@@ -16,7 +16,7 @@ typedef struct {
 
 typedef struct {
     char campo;
-    float precioXquintal;
+    float precioXquintal; // Esto es quintal/hectarea, en el archivo está mal la cabecera
     float hectareas;
     string semilla;
 } sBalanza;
@@ -87,15 +87,10 @@ void incrementarCampo(sCampo* &campo, unsigned int &tam){
 }
 
 /*
- * Main
+ * Archivos
 */
 
-int main(){
-    ifstream archi;
-    archi.open("precios.csv");
-
-    sPrecio* precio = nullptr;
-    unsigned int tamP=0;
+void leerPrecios(ifstream &archi, sPrecio* &precio, unsigned int &tamP){
     string linea;
     stringstream s;
 
@@ -114,14 +109,12 @@ int main(){
             getline(s, linea);
             precio[tamP-1].precio=stof(linea);
         }
-
-        archi.close();
     }
+}
 
-    archi.open("balanza.csv");
-
-    sBalanza* balanza = nullptr;
-    unsigned int tamB = 0;
+void leerBalanza(ifstream &archi, sBalanza* &balanza, unsigned int &tamB){
+    string linea;
+    stringstream s;
 
     if(archi.is_open()){
 
@@ -142,59 +135,109 @@ int main(){
             getline(s, linea);
             balanza[tamB-1].semilla=linea;
         }
-
-        archi.close();
     }
+}
 
+void escribirTXT(ofstream &archiS, sCampo* campo, unsigned int tamC, float total){
+    unsigned int j=0;
+    if(archiS.is_open()){
+        while(j<tamC){
+            archiS<<"Campo ["<<campo[j].campo<<"] vendió a U$D ["<<campo[j].total<<"]\n";
+            j++;
+        }
+
+        archiS<<"Ganancia total U$D ["<<total<<"]\n";
+    }
+}
+
+/*
+ * función procesar
+*/
+
+void procesar(sPrecio* precio, sBalanza* balanza, sCampo* &campo, unsigned int tamP, unsigned int tamB, unsigned int &tamC, float &total){
+    unsigned int j=0;
+    unsigned int k=0;
+    float calculo=0;
+    total=0;
+
+    for(unsigned int i=0; i < tamB; i++){
+
+        while(j < tamP && balanza[i].semilla != precio[j].grano){ // Busco el precio de mi semilla.
+            j++;
+        }
+
+        while(k < tamC && balanza[i].campo != campo[k].campo){ // Busco el campo.
+            k++;
+        }
+
+        if(k < tamC && j < tamP){ // Si el campo existe y el precio de la semilla se encontró => acumulo cuanto vendio el campo.
+            calculo = balanza[i].precioXquintal * balanza[i].hectareas * precio[j].precio;
+            campo[k].total += calculo;
+            total+=calculo;
+        }
+        else if(k >= tamC && j < tamP){  // si encuentro el precio de la semilla, pero no el campo => creo un nuevo campo y acumulo su venta.
+            calculo = balanza[i].precioXquintal * balanza[i].hectareas * precio[j].precio;
+            incrementarCampo(campo, tamC);
+            campo[tamC-1] = {balanza[i].campo, calculo};
+            total+=calculo;
+        }
+
+        j=0; // No recuerdo si en la clase reinicie los contadores, pero estos se deben reiniciar!!
+        k=0;
+    }
+}
+
+/*
+ * Main
+*/
+
+int main(){
+    ifstream archi;
+
+    /*
+     * Lectura precios
+    */
+    archi.open("precios.csv");
+
+    sPrecio* precio = nullptr;
+    unsigned int tamP=0;
+
+    leerPrecios(archi, precio, tamP);
+
+    archi.close();
+
+    /*
+     * Lectura balanza
+    */
+    archi.open("balanza.csv");
+
+    sBalanza* balanza = nullptr;
+    unsigned int tamB = 0;
+
+    leerBalanza(archi, balanza, tamB);
+
+    archi.close();
+
+    /*
+     * Procesar y cargar campos
+    */
     sCampo* campo = new sCampo[1];
     unsigned int tamC = 1;
 
     campo[0] = {balanza[0].campo, 0};
 
-    unsigned int j=0;
-    unsigned int k=0;
-
-    for(unsigned int i=0; i < tamB; i++){
-
-        while(j<tamP && balanza[i].semilla!=precio[j].grano){ // Busco el precio de mi semilla.
-            j++;
-        }
-
-        while(k<tamC && balanza[i].campo!=campo[k].campo){ // Busco el campo.
-            k++;
-        }
-
-        if(k<tamC && j<tamP){ // Si el campo existe y el precio de la semilla se encontró => acumulo cuanto vendio el campo.
-            campo[k].total += balanza[i].precioXquintal * balanza[i].hectareas * precio[j].precio;
-        }
-        else if(j>=tamP){ // Si no encuentro el precio de la semilla => error
-            cout<<"Error: No se encontró un precio para la semilla: "<<balanza[i].semilla<<endl;
-        }
-        else { // si encuentro el precio de la semilla, pero no el campo => creo un nuevo campo y acumulo su venta.
-            incrementarCampo(campo, tamC);
-            campo[tamC-1] = {balanza[i].campo, balanza[i].precioXquintal * balanza[i].hectareas * precio[j].precio};
-        }
-
-        j=0;
-        k=0;
-    }
-
-    ofstream archiS("informe_cosecha.txt");
-
-    j=0;
     float total=0;
 
-    if(archiS.is_open()){
-        while(j<tamC){
-            archiS<<"Campo ["<<campo[j].campo<<"] vendió a U$D ["<<campo[j].total<<"]\n";
-            total+=campo[j].total;
-            j++;
-        }
+    procesar(precio, balanza, campo, tamP, tamB, tamC, total);
 
-        archiS<<"Ganancia total U$D ["<<total<<"]\n";
+    /*
+     * Escribir archivo texto.
+    */
+    ofstream archiS("informe_cosecha.txt");
 
-        archiS.close();
-    }
+    escribirTXT(archiS, campo, tamC, total);
+
+    archiS.close();
 
     /*
      * Chequeo que mis punteros no sean nulos y los elimino
