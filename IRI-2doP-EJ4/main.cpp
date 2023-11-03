@@ -5,6 +5,10 @@
 
 using namespace std;
 
+/*
+ * structs
+*/
+
 typedef struct {
     string grano;
     float precio;
@@ -21,6 +25,10 @@ typedef struct {
     char campo;
     float total;
 } sCampo;
+
+/*
+ * Resizes
+*/
 
 void incrementarPrecio(sPrecio* &precio, unsigned int &tam){
     if(precio==nullptr){
@@ -77,6 +85,10 @@ void incrementarCampo(sCampo* &campo, unsigned int &tam){
 
     campo = temporal;
 }
+
+/*
+ * Main
+*/
 
 int main(){
     ifstream archi;
@@ -144,21 +156,21 @@ int main(){
 
     for(unsigned int i=0; i < tamB; i++){
 
-        while(j<tamP && balanza[i].semilla!=precio[j].grano){
+        while(j<tamP && balanza[i].semilla!=precio[j].grano){ // Busco el precio de mi semilla.
             j++;
         }
 
-        while(k<tamC && balanza[i].campo!=campo[k].campo){
+        while(k<tamC && balanza[i].campo!=campo[k].campo){ // Busco el campo.
             k++;
         }
 
-        if(k<tamC && j<tamP){
+        if(k<tamC && j<tamP){ // Si el campo existe y el precio de la semilla se encontró => acumulo cuanto vendio el campo.
             campo[k].total += balanza[i].precioXquintal * balanza[i].hectareas * precio[j].precio;
         }
-        else if(j>=tamP){
-            cout<<"No se encontró un precio para la semilla: "<<balanza[i].semilla<<endl;
+        else if(j>=tamP){ // Si no encuentro el precio de la semilla => error
+            cout<<"Error: No se encontró un precio para la semilla: "<<balanza[i].semilla<<endl;
         }
-        else {
+        else { // si encuentro el precio de la semilla, pero no el campo => creo un nuevo campo y acumulo su venta.
             incrementarCampo(campo, tamC);
             campo[tamC-1] = {balanza[i].campo, balanza[i].precioXquintal * balanza[i].hectareas * precio[j].precio};
         }
@@ -184,14 +196,23 @@ int main(){
         archiS.close();
     }
 
-    if(precio != nullptr)
+    /*
+     * Chequeo que mis punteros no sean nulos y los elimino
+    */
+    if(precio != nullptr) {
         delete[] precio;
+        precio = nullptr;
+    }
 
-    if(balanza != nullptr)
+    if(balanza != nullptr) {
         delete[] balanza;
+        balanza = nullptr;
+    }
 
-    if(campo != nullptr)
+    if(campo != nullptr) {
         delete[] campo;
+        campo=nullptr;
+    }
 
     return 0;
 }
